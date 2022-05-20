@@ -32,12 +32,16 @@ public class ChessGameFrame extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //设置程序关闭按键
         setLayout(null); //这个注释到就会只剩下一个load
 
-
+        addPicture();
         addChessboard();//棋盘主体
         addLabel();//那个文本
         addHelloButton();//消息框
+
         addLoadButton();//选择框
+
     }
+
+
 
     /**
      * 在游戏面板中添加棋盘
@@ -59,6 +63,9 @@ public class ChessGameFrame extends JFrame {
         jLabel.setSize(200, 60);
         jLabel.setFont(new Font("Rockwell", Font.BOLD, 20));
         add(jLabel);
+
+
+
     }
 
 
@@ -111,6 +118,18 @@ public class ChessGameFrame extends JFrame {
             gameController.loadGameFromFile(path);
 
         });
+    }
+    private void addPicture() {
+        Container container;
+
+        JLabel image;
+
+        container=this.getContentPane();
+
+        container.add(image= new JLabel(new ImageIcon("C:/Users/user/Desktop/ChessDemo 0519/ChessDemo/images/背景.png")));
+        image.setLocation(HEIGTH/10,HEIGTH/10);
+        image.setBounds(HEIGTH/10,HEIGTH/10,700,500);
+        this.setVisible(true);
     }
 
 }
