@@ -18,7 +18,7 @@ public enum ChessColor {
 
     @Override
     public String toString() {
-        return "ChessColor: " + getName();
+        return getName();
     }
 
     public String getName() {

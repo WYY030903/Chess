@@ -60,10 +60,13 @@ public class ClickController {
                 checked.repaint();//没有这个没法选中
             }
         } else {
+
             for (ChessComponent component : C) {
-                component.repaint();
+                chessboard.putChessOnBoard(component);
+                System.out.printf("repaint chess [%s,%s]\n", component.getChessboardPoint().getX(), component.getChessboardPoint().getY());
             }
             C.clear();
+
             if (checked == chessComponent) {//再次点击取消选择
                 chessComponent.setSelected(false);//放下棋子
                 //这里也是
@@ -77,9 +80,27 @@ public class ClickController {
                 //这里添加警告
 
                 chessboard.swapColor();//换持方
-
-
                 checked.setSelected(false);//放下棋子
+
+                //这里是判负
+                List<ChessComponent> components = checked.canMoveToWhere(chessboard.getChessComponents());
+                for (ChessComponent component : components) {
+                    if (component instanceof KingChessComponent && component.getChessColor() != checked.getChessColor()) {
+                        if (component.canMoveToWhere(chessboard.getChessComponents()).size() == 0) {
+                            jFrame.setTitle("Loser");
+                            jFrame.setSize(400, 200);
+                            jFrame.setLocation(760,76);
+                            JLabel jLabel = new JLabel();
+                            jLabel.setSize(200, 100);
+                            jLabel.setFont(new Font("微软雅黑",Font.BOLD,50));
+                            jLabel.setText("Loser:" + component.getChessColor().toString());
+                            jFrame.add(jLabel);
+                            jFrame.setVisible(true);
+                        }
+                    }
+                }
+
+
                 checked = null;//放下棋子
             }
         }
