@@ -32,12 +32,15 @@ public class ChessGameFrame extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //设置程序关闭按键
         setLayout(null); //这个注释到就会只剩下一个load
 
-        addPicture();
+
         addChessboard();//棋盘主体
         addLabel();//那个文本
         addHelloButton();//消息框
 
         addLoadButton();//选择框
+        addRankButton();
+        addPicture();
+
 
     }
 
@@ -88,6 +91,19 @@ public class ChessGameFrame extends JFrame {
         add(button);
 
     }
+    private void addRankButton() {
+        JButton button = new JButton("Rank");
+        button.setLocation(HEIGTH, HEIGTH / 10 + 360);
+        button.setSize(200, 60);
+        button.setFont(new Font("Rockwell", Font.BOLD, 20));
+        add(button);
+        button.addActionListener(e -> {
+            System.out.println("Click start");
+            RankFrame frame = new RankFrame(1000, 760);
+            frame.setVisible(true);//可视化
+        });
+
+    }
 
 
     private void addLoadButton() {
@@ -123,12 +139,11 @@ public class ChessGameFrame extends JFrame {
         Container container;
 
         JLabel image;
-
         container=this.getContentPane();
 
-        container.add(image= new JLabel(new ImageIcon("C:/Users/user/Desktop/ChessDemo 0519/ChessDemo/images/背景.png")));
-        image.setLocation(HEIGTH/10,HEIGTH/10);
-        image.setBounds(HEIGTH/10,HEIGTH/10,700,500);
+        container.add(image= new JLabel(new ImageIcon("./images/picture.png")));
+        image.setLocation(HEIGTH/100,HEIGTH/100);
+        image.setBounds(10,10,735,735);
         this.setVisible(true);
     }
 
