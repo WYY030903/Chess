@@ -3,6 +3,7 @@ package controller;
 
 import model.ChessColor;
 import model.ChessComponent;
+import model.component.KingChessComponent;
 import view.ChessGameFrame;
 import view.Chessboard;
 
@@ -18,6 +19,8 @@ import java.util.List;
 public class ClickController {
     private final Chessboard chessboard;
     private ChessComponent checked;
+
+    public JFrame jFrame = new JFrame();
 
     public ClickController(Chessboard chessboard) {
         this.chessboard = chessboard;
@@ -70,6 +73,9 @@ public class ClickController {
             } else if (handleSecond(chessComponent)) {//选中了别的地方//看一下能不能移过去
                 //repaint in swap chess method.
                 chessboard.swapChessComponents(checked, chessComponent);//估计是交换棋子并且吃子
+
+                //这里添加警告
+
                 chessboard.swapColor();//换持方
 
 
