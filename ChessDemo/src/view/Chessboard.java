@@ -222,8 +222,8 @@ public class Chessboard extends JComponent {
         int row2 = chess2.getChessboardPoint().getX(), col2 = chess2.getChessboardPoint().getY();
         chessComponents[row2][col2] = chess2;//把换好的棋子放回棋盘的正确位置
 
-        chess1.repaint();
-        chess2.repaint();
+        chessComponents[row1][col1].repaint();
+        chessComponents[row2][col2].repaint();
         //重置棋子图片，但好像没用
     }
 
@@ -251,6 +251,7 @@ public class Chessboard extends JComponent {
         jFrame1.setSize(200, 100);
         String a = currentColor.toString();
         JLabel jLabel = new JLabel();
+        jLabel.setFont(new Font("微软雅黑",Font.BOLD,30));
         jLabel.setText(a);
         jFrame1.add(jLabel);
         jFrame1.repaint();

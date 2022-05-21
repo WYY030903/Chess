@@ -36,14 +36,13 @@ public class ChessGameFrame extends JFrame {
         addChessboard();//棋盘主体
         addLabel();//那个文本
         addHelloButton();//消息框
+
         addLoadButton();//选择框
         addRankButton();
         addPicture();
 
 
-
     }
-
 
 
 
@@ -99,7 +98,7 @@ public class ChessGameFrame extends JFrame {
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
         add(button);
         button.addActionListener(e -> {
-
+            System.out.println("Click start");
             RankFrame frame = new RankFrame(1000, 760);
             frame.setVisible(true);//可视化
         });

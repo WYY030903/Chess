@@ -3,21 +3,22 @@ package controller;
 
 import model.ChessColor;
 import model.ChessComponent;
-import view.ChessGameFrame;
+import model.component.KingChessComponent;
 import view.Chessboard;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ClickController {
     private final Chessboard chessboard;
     private ChessComponent checked;
+
+    public JFrame jFrame = new JFrame();
+    public JFrame jFrame0 = new JFrame();
+    public JFrame jFrame1 = new JFrame();
+    private int times = 0;
 
     public ClickController(Chessboard chessboard) {
         this.chessboard = chessboard;
@@ -57,10 +58,13 @@ public class ClickController {
                 checked.repaint();//没有这个没法选中
             }
         } else {
+
             for (ChessComponent component : C) {
-                component.repaint();
+                chessboard.putChessOnBoard(component);
+                System.out.printf("repaint chess [%s,%s]\n", component.getChessboardPoint().getX(), component.getChessboardPoint().getY());
             }
             C.clear();
+
             if (checked == chessComponent) {//再次点击取消选择
                 chessComponent.setSelected(false);//放下棋子
                 //这里也是
@@ -70,10 +74,88 @@ public class ClickController {
             } else if (handleSecond(chessComponent)) {//选中了别的地方//看一下能不能移过去
                 //repaint in swap chess method.
                 chessboard.swapChessComponents(checked, chessComponent);//估计是交换棋子并且吃子
+
+                //这里添加警告
+                List<ChessComponent> componentList = checked.canMoveToWhere(chessboard.getChessComponents());
+
+                for (ChessComponent value : componentList) {
+                    if (value instanceof KingChessComponent && value.getChessColor() != checked.getChessColor()) {
+                        jFrame.setTitle("Attack");
+                        jFrame.setSize(200, 100);
+                        jFrame.setLocation(760, 76);
+                        jFrame0.setTitle("Attack");
+                        jFrame0.setSize(200, 100);
+                        jFrame0.setLocation(760, 76);
+                        times++;
+                        if (times == 3) {
+                            JLabel jLabel1 = new JLabel();
+                            jLabel1.setFont(new Font("微软雅黑", Font.BOLD, 20));
+                            jLabel1.setText("A tie");
+                            jFrame.setVisible(false);
+                            jFrame0.add(jLabel1);
+                            jFrame0.setVisible(true);
+                        } else {
+                            JLabel jLabel = new JLabel();
+                            jLabel.setFont(new Font("微软雅黑", Font.BOLD, 20));
+                            jLabel.setText("Warning!!! " + value.getChessColor().toString());
+                            jFrame.add(jLabel);
+                            jFrame.setVisible(true);
+                        }
+
+
+                    }
+                }
+
                 chessboard.swapColor();//换持方
-
-
                 checked.setSelected(false);//放下棋子
+
+                //这里是判负
+                List<ChessComponent> components = checked.canMoveToWhere(chessboard.getChessComponents());
+                for (ChessComponent component : components) {
+                    if (component instanceof KingChessComponent && component.getChessColor() != checked.getChessColor()) {
+                        if (component.canMoveToWhere(chessboard.getChessComponents()).size() == 0) {
+                            jFrame.setTitle("Loser");
+                            jFrame.setSize(400, 200);
+                            jFrame.setLocation(760, 76);
+                            JLabel jLabel = new JLabel();
+                            jLabel.setSize(200, 100);
+                            jLabel.setFont(new Font("微软雅黑", Font.BOLD, 50));
+                            jLabel.setText("Loser:" + component.getChessColor().toString());
+                            jFrame.add(jLabel);
+                            jFrame.setVisible(true);
+                        }
+                    }
+                }
+                ChessColor color = chessboard.getCurrentColor();
+                List<ChessComponent> chessComponentList = new ArrayList<>();
+                for (int i = 0; i < chessboard.getChessComponents().length; i++) {
+                    for (int j = 0; j < chessboard.getChessComponents()[0].length; j++) {
+                        if (chessboard.getChessComponents()[i][j].getChessColor() == color) {
+                            chessComponentList.add(chessboard.getChessComponents()[i][j]);
+                        }
+                    }
+                }
+                boolean a = false;
+                for (ChessComponent component : chessComponentList) {
+                    if (!(component.canMoveToWhere(chessboard.getChessComponents()).size()==0)) {
+                        a = true;
+                        break;
+                    }
+                }
+                if (!a) {
+                    jFrame1.setTitle("No move");
+                    jFrame1.setSize(200, 100);
+                    jFrame1.setLocation(760, 76);
+                    JLabel jLabel2 = new JLabel();
+                    jLabel2.setFont(new Font("微软雅黑", Font.BOLD, 20));
+                    jLabel2.setText("A tie");
+                    jFrame.setVisible(false);
+                    jFrame0.setVisible(false);
+                    jFrame1.add(jLabel2);
+                    jFrame1.setVisible(true);
+                }
+
+
                 checked = null;//放下棋子
             }
         }

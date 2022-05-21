@@ -3,7 +3,8 @@ package view;
 import javax.swing.*;
 import java.awt.*;
 
-public class RankFrame extends JFrame {private int WIDTH = 0;
+public class RankFrame extends JFrame {
+    private int WIDTH = 0;
     private int HEIGTH = 0;
     public RankFrame(int width, int height){
         this.WIDTH = width;
@@ -14,7 +15,6 @@ public class RankFrame extends JFrame {private int WIDTH = 0;
         setLayout(null); //这个注释到就会只剩下一个load
 
         addPicture();
-
 
     }
 
@@ -28,7 +28,6 @@ public class RankFrame extends JFrame {private int WIDTH = 0;
         image.setLocation(HEIGTH/100,HEIGTH/100);
         image.setBounds(10,10,735,735);
         this.setVisible(true);
-
     }
 
 }

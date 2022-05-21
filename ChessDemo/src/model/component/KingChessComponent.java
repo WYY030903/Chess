@@ -47,7 +47,7 @@ public class KingChessComponent extends ChessComponent {
     }
 
     @Override
-    public boolean canMoveTo(ChessComponent[][] chessComponents, ChessboardPoint destination ) {
+    public boolean canMoveTo(ChessComponent[][] chessComponents, ChessboardPoint destination) {
         ChessboardPoint source = getChessboardPoint();
         int x = source.getX(), y = source.getY();
         int x0 = destination.getX(), y0 = destination.getY();
@@ -139,30 +139,48 @@ public class KingChessComponent extends ChessComponent {
     public List<ChessComponent> canMoveToWhere(ChessComponent[][] chessComponents) {
         int x = this.getChessboardPoint().getX(), y = this.getChessboardPoint().getY();
         List<ChessComponent> components = new ArrayList<>();
-        if (x + 1 <= 7 && chessComponents[x + 1][y] instanceof EmptySlotComponent) {
-            components.add(chessComponents[x + 1][y]);
+        if (x + 1 <= 7) {
+            if (chessComponents[x + 1][y] instanceof EmptySlotComponent || chessComponents[x + 1][y].getChessColor() != chessColor) {
+                components.add(chessComponents[x + 1][y]);
+            }
         }
-        if (x - 1 >= 0 && chessComponents[x - 1][y] instanceof EmptySlotComponent) {
-            components.add(chessComponents[x - 1][y]);
+        if (x - 1 >= 0) {
+            if (chessComponents[x - 1][y] instanceof EmptySlotComponent || chessComponents[x - 1][y].getChessColor() != chessColor) {
+                components.add(chessComponents[x - 1][y]);
+            }
         }
-        if (y + 1 <= 7 && chessComponents[x][y + 1] instanceof EmptySlotComponent) {
-            components.add(chessComponents[x][y + 1]);
+        if (y + 1 <= 7) {
+            if (chessComponents[x][y + 1] instanceof EmptySlotComponent || chessComponents[x][y + 1].getChessColor() != chessColor) {
+                components.add(chessComponents[x][y + 1]);
+            }
         }
-        if (y - 1 >= 0 && chessComponents[x][y - 1] instanceof EmptySlotComponent) {
-            components.add(chessComponents[x][y - 1]);
+        if (y - 1 >= 0) {
+            if (chessComponents[x][y - 1] instanceof EmptySlotComponent || chessComponents[x][y - 1].getChessColor() != chessColor) {
+                components.add(chessComponents[x][y - 1]);
+            }
         }
-        if (x + 1 <= 7 && y + 1 <= 7 && chessComponents[x + 1][y + 1] instanceof EmptySlotComponent) {
-            components.add(chessComponents[x + 1][y + 1]);
+        if (x + 1 <= 7 && y + 1 <= 7) {
+            if (chessComponents[x + 1][y + 1] instanceof EmptySlotComponent || chessComponents[x + 1][y + 1].getChessColor() != chessColor) {
+                components.add(chessComponents[x + 1][y + 1]);
+            }
         }
-        if (x + 1 <= 7 && y - 1 >= 0 && chessComponents[x + 1][y - 1] instanceof EmptySlotComponent) {
-            components.add(chessComponents[x + 1][y - 1]);
+        if (x + 1 <= 7 && y - 1 >= 0) {
+            if (chessComponents[x + 1][y - 1] instanceof EmptySlotComponent || chessComponents[x + 1][y - 1].getChessColor() != chessColor) {
+                components.add(chessComponents[x + 1][y - 1]);
+            }
         }
-        if (x - 1 >= 0 && y - 1 >= 0 && chessComponents[x - 1][y - 1] instanceof EmptySlotComponent) {
-            components.add(chessComponents[x - 1][y - 1]);
+        if (x - 1 >= 0 && y - 1 >= 0) {
+            if (chessComponents[x - 1][y - 1] instanceof EmptySlotComponent || chessComponents[x - 1][y - 1].getChessColor() != chessColor) {
+                components.add(chessComponents[x - 1][y - 1]);
+            }
         }
-        if (x - 1 >= 0 && y + 1 <= 7 && chessComponents[x - 1][y + 1] instanceof EmptySlotComponent) {
-            components.add(chessComponents[x - 1][y + 1]);
+        if (x - 1 >= 0 && y + 1 <= 7) {
+            if (chessComponents[x - 1][y + 1] instanceof EmptySlotComponent || chessComponents[x - 1][y + 1].getChessColor() != chessColor) {
+                components.add(chessComponents[x - 1][y + 1]);
+            }
         }
+
+        //删除有对方王的地方
         ArrayList<ChessComponent> arrayList = new ArrayList<>();
         for (ChessComponent component : components) {
             if (!noKing(x, y, component.getChessboardPoint().getX(), component.getChessboardPoint().getY(), chessComponents)) {
@@ -171,6 +189,111 @@ public class KingChessComponent extends ChessComponent {
         }
         for (ChessComponent chessComponent : arrayList) {
             components.remove(chessComponent);
+        }
+
+        //删除其他棋子能攻击到的地方//除了兵和王
+        List<ChessComponent> componentList = getOpponent(chessComponents);
+        List<ChessComponent> deleting = new ArrayList<>();
+        for (ChessComponent component : componentList) {
+            List<ChessComponent> chessComponentList = component.canMoveToWhere(chessComponents);
+            for (ChessComponent chessComponent : chessComponentList) {
+                for (ChessComponent value : components) {
+                    if (chessComponent == value) {
+                        deleting.add(value);
+                    }
+                }
+            }
+        }
+        for (ChessComponent chessComponent : deleting) {
+            components.remove(chessComponent);
+        }
+        deleting.clear();
+
+        //删除兵能去的地方
+        List<ChessComponent> componentListPawnAttack = getPawnAttack(chessComponents);
+        for (ChessComponent chessComponent : componentListPawnAttack) {
+            for (ChessComponent component : components) {
+                if (chessComponent == component) {
+                    deleting.add(component);
+                }
+            }
+        }
+        for (ChessComponent chessComponent : deleting) {
+            components.remove(chessComponent);
+        }
+        deleting.clear();
+
+
+        return components;
+    }
+
+    public List<ChessComponent> getPawnAttack(ChessComponent[][] chessComponents) {
+        List<ChessComponent> components = new ArrayList<>();
+        for (ChessComponent[] chessComponent : chessComponents) {
+            for (int j = 0; j < chessComponents[0].length; j++) {
+                if (chessComponent[j] instanceof PawnChessComponent && chessComponent[j].getChessColor() != chessColor) {
+                    components.add(chessComponent[j]);
+                }
+            }
+        }
+        List<ChessComponent> componentList = new ArrayList<>();
+        for (ChessComponent component : components) {
+            int x = component.getChessboardPoint().getX(), y = component.getChessboardPoint().getY();
+            if (component.getChessColor() == ChessColor.BLACK) {
+                if (x + 1 <= 7) {
+                    if (y - 1 >= 0) {
+                        if (chessComponents[x + 1][y - 1] instanceof EmptySlotComponent) {
+                            componentList.add(chessComponents[x + 1][y - 1]);
+                        }
+                    }
+                    if (y + 1 <= 7) {
+                        if (chessComponents[x + 1][y + 1] instanceof EmptySlotComponent) {
+                            componentList.add(chessComponents[x + 1][y + 1]);
+                        }
+                    }
+                }
+            }
+            if (component.getChessColor() == ChessColor.WHITE) {
+                if (x - 1 >= 0) {
+                    if (y - 1 >= 0) {
+                        if (chessComponents[x - 1][y - 1] instanceof EmptySlotComponent) {
+                            componentList.add(chessComponents[x - 1][y - 1]);
+                        }
+                    }
+                    if (y + 1 <= 7) {
+                        if (chessComponents[x - 1][y + 1] instanceof EmptySlotComponent) {
+                            componentList.add(chessComponents[x - 1][y + 1]);
+                        }
+                    }
+                }
+            }
+        }
+        componentList = deRepetition(componentList);
+        return componentList;
+    }
+
+    public List<ChessComponent> deRepetition (List<ChessComponent> components) {
+        List<ChessComponent> componentList =new ArrayList<>();
+        for (ChessComponent component : components) {
+            if (!componentList.contains(component)) {
+                componentList.add(component);
+            }
+        }
+        components.clear();
+        components.addAll(componentList);
+        return components;
+    }
+
+    public List<ChessComponent> getOpponent(ChessComponent[][] chessComponents) {
+        List<ChessComponent> components = new ArrayList<>();
+        for (ChessComponent[] chessComponent : chessComponents) {
+            for (int j = 0; j < chessComponents[0].length; j++) {
+                if ((chessComponent[j].getChessColor() == ChessColor.BLACK && chessColor == ChessColor.WHITE) || (chessComponent[j].getChessColor() == ChessColor.WHITE && chessColor == ChessColor.BLACK)) {
+                    if (!(chessComponent[j] instanceof KingChessComponent) && !(chessComponent[j] instanceof PawnChessComponent)) {
+                        components.add(chessComponent[j]);
+                    }
+                }
+            }
         }
         return components;
     }

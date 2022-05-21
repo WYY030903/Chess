@@ -60,6 +60,9 @@ public class PawnChessComponent extends ChessComponent {
                 if (x0 == 5 && y == y0 && chessComponents[x0][y0] instanceof EmptySlotComponent) {
                     return true;
                 }
+                if (x0 == 5 && (y0 == y + 1 || y0 == y - 1) && chessComponents[x0][y0].getChessColor() == ChessColor.BLACK) {
+                    return true;
+                }
                 if (x0 == 4 && y == y0 && chessComponents[x0][y0] instanceof EmptySlotComponent && chessComponents[4][y] instanceof EmptySlotComponent) {
                     return true;
                 }
