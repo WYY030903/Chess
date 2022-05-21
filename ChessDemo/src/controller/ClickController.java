@@ -126,6 +126,7 @@ public class ClickController {
                         }
                     }
                 }
+
                 ChessColor color = chessboard.getCurrentColor();
                 List<ChessComponent> chessComponentList = new ArrayList<>();
                 for (int i = 0; i < chessboard.getChessComponents().length; i++) {

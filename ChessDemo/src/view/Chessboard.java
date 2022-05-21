@@ -44,7 +44,7 @@ public class Chessboard extends JComponent {
     //all chessComponents in this chessboard are shared only one model controller
     private final ClickController clickController = new ClickController(this); //调用鼠标控制器
     private final int CHESS_SIZE;//一个格子
-    private int round = 0;
+    private int round = 1;
 
     public int getRound() {
         return round;
@@ -115,12 +115,12 @@ public class Chessboard extends JComponent {
     }
 
     public void storeTxt(ChessComponent[][] chessComponents, int round) {
-        File file = new File("D:\\桌面\\chess");
+        File file = new File("D:\\桌面\\ChessDemo\\files");
         if (!file.exists()) {
             file.mkdirs();
         }
         try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("D:\\桌面\\chess\\chessStoreRound" + round + ".txt"));
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("D:\\桌面\\ChessDemo\\files\\chessStoreRound" + round + ".txt"));
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
                     ChessComponent C = chessComponents[i][j];
@@ -227,10 +227,10 @@ public class Chessboard extends JComponent {
         //重置棋子图片，但好像没用
     }
 
-    /**
-     * 设置空白棋子
-     */
 
+    public void setRound(int round) {
+        this.round = round;
+    }
 
     /**
      * 更换持方
@@ -348,6 +348,7 @@ public class Chessboard extends JComponent {
      * @param chessData 棋局的字符串组合
      */
     public void loadGame(List<String> chessData) {
+        removeAll();
         for (String chessDatum : chessData) {
             out.println(chessDatum);
         }

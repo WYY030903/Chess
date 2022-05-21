@@ -35,15 +35,16 @@ public class ChessGameFrame extends JFrame {
 
         addChessboard();//棋盘主体
         addLabel();//那个文本
-        addHelloButton();//消息框
+        addRestartButton();//消息框
 
         addLoadButton();//选择框
         addRankButton();
+        addStoreButton();
+        addUndoButton();
         addPicture();
 
 
     }
-
 
 
     /**
@@ -68,82 +69,120 @@ public class ChessGameFrame extends JFrame {
         add(jLabel);
 
 
-
     }
 
 
     /**
      * 在游戏面板中增加一个按钮，如果按下的话就会显示Hello, world!
      */
-    private void addHelloButton() {
+    private void addRestartButton() {
         JButton button = new JButton("Restart");
         button.addActionListener(e -> {
             System.out.println("Click Restart");
 //            JOptionPane.showMessageDialog(this, "Hello, world!");
             setVisible(false);
             chessboard.getJFrame().setVisible(false);
-            ChessGameFrame chessGameFrame = new ChessGameFrame(1000,760);
+            ChessGameFrame chessGameFrame = new ChessGameFrame(1000, 760);
             chessGameFrame.setVisible(true);
         });
-        button.setLocation(HEIGTH, HEIGTH / 10 + 120);
+        button.setLocation(HEIGTH, HEIGTH / 10 + 60);
         button.setSize(200, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
         add(button);
 
     }
+
+
     private void addRankButton() {
         JButton button = new JButton("Rank");
-        button.setLocation(HEIGTH, HEIGTH / 10 + 360);
+        button.setLocation(HEIGTH, HEIGTH / 10 + 300);
         button.setSize(200, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
         add(button);
-        button.addActionListener(e -> {
-            System.out.println("Click start");
-            RankFrame frame = new RankFrame(1000, 760);
-            frame.setVisible(true);//可视化
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Click start");
+                RankFrame frame = new RankFrame(1000, 760);
+                frame.setVisible(true);//可视化
+            }
         });
 
     }
 
+    public void addStoreButton() {
+        JButton button = new JButton("Store");
+        button.setLocation(HEIGTH, HEIGTH / 10 + 420);
+        button.setSize(200, 60);
+        button.setFont(new Font("Rockwell", Font.BOLD, 20));
+        add(button);
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                chessboard.storeTxt(chessboard.getChessComponents(), 0);
+                setVisible(true);
+            }
+        });
+    }
 
     private void addLoadButton() {
         JButton button = new JButton("Load");
-        button.setLocation(HEIGTH, HEIGTH / 10 + 240);
+        button.setLocation(HEIGTH, HEIGTH / 10 + 180);
         button.setSize(200, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
         add(button);
 
         //这里可以加载棋局
-        button.addActionListener(e -> {
-            System.out.println("Click load");
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Click load");
+                //用文件选择来搞这里 1分
+                String path = JOptionPane.showInputDialog(ChessGameFrame.this, "Input Path here");
+                if (!path.endsWith(".txt")) {
+                    System.out.println("It's not a correct chessboard");//检查文件格式错误
+                    jFrame = new JFrame();
+                    jFrame.setSize(50, 100);
+                    jFrame.setLocation(760, 76);
+                    JLabel jLabel1 = new JLabel("104");
+                    jFrame.add(jLabel1);
+                    jFrame.setVisible(true);
+                    ChessGameFrame.this.add(jFrame);
+                }
+                gameController.loadGameFromFile(path);
 
-            //用文件选择来搞这里 1分
-
-
-            String path = JOptionPane.showInputDialog(ChessGameFrame.this, "Input Path here");
-            if (!path.endsWith(".txt")) {
-                System.out.println("It's not a correct chessboard");//检查文件格式错误
-                jFrame = new JFrame();
-                jFrame.setSize(50, 100);
-                jFrame.setLocation(760, 76);
-                JLabel jLabel1 = new JLabel("104");
-                jFrame.add(jLabel1);
-                jFrame.setVisible(true);
-                add(jFrame);
             }
-            gameController.loadGameFromFile(path);
-
         });
     }
+
+    private void addUndoButton() {
+        JButton button = new JButton("Undo");
+        button.setLocation(HEIGTH, HEIGTH / 10 + 540);
+        button.setSize(200, 60);
+        button.setFont(new Font("Rockwell", Font.BOLD, 20));
+        add(button);
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int a = chessboard.getRound() - 1;
+                String path = "files/chessStoreRound" + a + ".txt";
+                gameController.loadGameFromFile(path);
+                chessboard.setRound(a);
+                setVisible(true);
+            }
+        });
+    }
+
+
     private void addPicture() {
         Container container;
 
         JLabel image;
-        container=this.getContentPane();
+        container = this.getContentPane();
 
-        container.add(image= new JLabel(new ImageIcon("./images/picture.png")));
-        image.setLocation(HEIGTH/100,HEIGTH/100);
-        image.setBounds(10,10,735,735);
+        container.add(image = new JLabel(new ImageIcon("./images/picture.png")));
+        image.setLocation(HEIGTH / 100, HEIGTH / 100);
+        image.setBounds(10, 10, 735, 735);
         this.setVisible(true);
     }
 
