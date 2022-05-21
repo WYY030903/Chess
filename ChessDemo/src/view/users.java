@@ -8,12 +8,11 @@ public class users {
     private int WinsTimes;
     private int LoseTimes;
     private int ranking;
+    private int score;//赢一场得3输一场扣1
 
     public users(String id){
         this.id=id;
     }
-    public class UsersFrame extends JFrame{
 
-    }
 }
 

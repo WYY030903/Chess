@@ -21,7 +21,7 @@ public class ChessGameMainFrame extends JFrame {
         setLayout(null); //这个注释到就会只剩下一个load
 
         addLabel2();
-        addLoadingButton();//登录
+        //addLoadingButton();//登录
         addStartButton();//主界面进入游戏界面
     }
 
@@ -46,14 +46,14 @@ public class ChessGameMainFrame extends JFrame {
         });
 
     }
-    private void addLoadingButton() {
-        String id1 = JOptionPane.showInputDialog(ChessGameMainFrame.this, "Input White Player");
-        String id2 = JOptionPane.showInputDialog(ChessGameMainFrame.this, "Input Black Player");
-        users player1 =new users(id1);
-        users player2 =new users(id2);
-
-
-    }
+//    private void addLoadingButton() {
+//        String id1 = JOptionPane.showInputDialog(ChessGameMainFrame.this, "Input White Player");
+//        String id2 = JOptionPane.showInputDialog(ChessGameMainFrame.this, "Input Black Player");
+//        users player1 =new users(id1);
+//        users player2 =new users(id2);
+//
+//
+//    }
 
 
 }
