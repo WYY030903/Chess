@@ -209,6 +209,40 @@ public class Chessboard extends JComponent {
      */
 
     public void swapChessComponents(ChessComponent chess1, ChessComponent chess2) {
+
+        File file = new File("D:\\桌面\\ChessDemo\\move");
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        try {
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("D:\\桌面\\ChessDemo\\move\\chessMove" + round + ".txt"));
+            bufferedWriter.write(chess1.toString());
+            if (chess1 instanceof QueenChessComponent) {
+                bufferedWriter.write("Queen");
+            }
+            if (chess1 instanceof KingChessComponent) {
+                bufferedWriter.write("King");
+            }
+            if (chess1 instanceof KnightChessComponent) {
+                bufferedWriter.write("Knight");
+            }
+            if (chess1 instanceof BishopChessComponent) {
+                bufferedWriter.write("Bishop");
+            }
+            if (chess1 instanceof RookChessComponent) {
+                bufferedWriter.write("Rook");
+            }
+            if (chess1 instanceof PawnChessComponent) {
+                bufferedWriter.write("Pawn");
+            }
+
+            bufferedWriter.newLine();
+            bufferedWriter.write("[" + chess2.getChessboardPoint().getX() + "," + chess2.getChessboardPoint().getY() + "]");
+            bufferedWriter.close();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         // Note that chess1 has higher priority, 'destroys' chess2 if exists.
         //chess1有更高的优先级，如果chess2存在就吃掉它
         chess1.setRound(round);
@@ -251,7 +285,7 @@ public class Chessboard extends JComponent {
         jFrame1.setSize(200, 100);
         String a = currentColor.toString();
         JLabel jLabel = new JLabel();
-        jLabel.setFont(new Font("微软雅黑",Font.BOLD,30));
+        jLabel.setFont(new Font("微软雅黑", Font.BOLD, 30));
         jLabel.setText(a);
         jFrame1.add(jLabel);
         jFrame1.repaint();
